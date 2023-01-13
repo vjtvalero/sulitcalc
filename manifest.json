@@ -1,0 +1,37 @@
+{
+  "background_color": "#ffffff",
+  "description": "Compare prices and determine which is more sulit!",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Sulit Calc",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "vjtv.sulitcalc",
+  "start_url": "/",
+  "theme_color": "#6366f1",
+  "categories": [],
+  "screenshots": [],
+  "icons": [
+    {
+      "src": "assets/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icon-256x256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": []
+}
