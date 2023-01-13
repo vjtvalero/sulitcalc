@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" />
+  </head>
+  <body class="bg-gray-200">
+    <form class="bg-white p-6 shadow-md" id="form">
+      <h2 class="text-lg font-bold mb-6">Sulit Calculator</h2>
+      <!-- Item 1 -->
+      <div class="mb-4">
+        <input class="border border-gray-300 p-2 w-full" type="text" placeholder="Item 1 name" name="item1_name" />
+      </div>
+      <div class="mb-4">
+        <div class="flex flex-wrap items-stretch w-full mb-4 relative">
+          <input
+            type="number"
+            class="flex-shrink flex-grow flex-auto leading-normal w-px flex-1 border h-10 border-gray-300 px-3 relative"
+            placeholder="Enter size"
+            name="item1_size"
+            required
+          />
+          <div class="flex -mr-px">
+            <select class="border border-gray-light p-2 w-full bg-white" name="metric" id="item1_metric" required>
+              <option value="pc">pc</option>
+              <option value="ml">ml</option>
+              <option value="kg">kg</option>
+              <option value="cm">cm</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="mb-4">
+        <input
+          class="border border-gray-300 p-2 w-full"
+          type="number"
+          placeholder="Enter price"
+          name="item1_price"
+          required
+        />
+      </div>
+      <hr class="my-6" />
+      <!-- Item 2 -->
+      <div class="mb-4">
+        <input class="border border-gray-300 p-2 w-full" type="text" placeholder="Item 2 name" name="item2_name" />
+      </div>
+      <div class="mb-4">
+        <div class="flex flex-wrap items-stretch w-full mb-4 relative">
+          <input
+            type="number"
+            class="flex-shrink flex-grow flex-auto leading-normal w-px flex-1 border h-10 border-gray-300 px-3 relative"
+            placeholder="Enter size"
+            name="item2_size"
+            required
+          />
+          <div class="flex -mr-px">
+            <span
+              class="flex items-center leading-normal bg-grey-lighter rounded rounded-l-none border border-l-0 border-grey-light px-3 whitespace-no-wrap text-grey-dark"
+              id="item2_metric"
+              >pc</span
+            >
+          </div>
+        </div>
+      </div>
+      <div class="mb-4">
+        <input
+          class="border border-gray-300 p-2 w-full"
+          type="number"
+          placeholder="Enter price"
+          name="item2_price"
+          required
+        />
+      </div>
+      <hr class="my-6" />
+      <button type="submit" class="bg-indigo-500 text-white py-2 px-4 hover:bg-indigo-600 rounded-full" id="compute">
+        Compute
+      </button>
+      <button type="reset" class="bg-gray-500 text-white py-2 px-4 hover:bg-gray-600 rounded-full">Reset</button>
+    </form>
+
+    <div id="result" class="p-8"></div>
+
+    <script type="text/javascript">
+      document.getElementById('form').addEventListener('submit', (e) => {
+        resetResult();
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+
+        // compute logic
+        try {
+          const items = [
+            {
+              name: data.item1_name || 'Item 1',
+              value: parseFloat(parseFloat(data.item1_size / data.item1_price).toFixed(2)),
+              costPerUnit: parseFloat(parseFloat(data.item1_price / data.item1_size).toFixed(2)),
+            },
+            {
+              name: data.item2_name || 'Item 2',
+              value: parseFloat(parseFloat(data.item2_size / data.item2_price).toFixed(2)),
+              costPerUnit: parseFloat(parseFloat(data.item2_price / data.item2_size).toFixed(2)),
+            },
+          ];
+
+          const sulitValue = Math.max.apply(
+            null,
+            items.map(function (item) {
+              return item.value;
+            })
+          );
+
+          // print result
+          const sulit = items.filter((item) => item.value === sulitValue)[0];
+          const notSulit = items.filter((item) => item.value !== sulitValue)[0];
+          if (!notSulit) {
+            throw new Error('Both items are of equal value.');
+          }
+          addToResult(`<p><strong>${sulit.name}</strong> is more sulit!</p>`);
+          addToResult(
+            `<p>It only costs ${sulit.costPerUnit.toFixed(2)} per ${data.metric} as opposed to ${
+              notSulit.name
+            } that costs ${notSulit.costPerUnit.toFixed(2)} per ${data.metric}</p>`
+          );
+          addToResult(
+            `<p>You will get <strong>${
+              parseFloat((sulit.value / notSulit.value) * 100).toFixed(0) - 100
+            }%</strong> more if you buy ${sulit.name}</p>`
+          );
+
+          window.scrollTo(0, document.body.scrollHeight);
+        } catch (error) {
+          addToResult(`${error.message}`);
+        }
+      });
+
+      function addToResult(html) {
+        document.getElementById('result').innerHTML += html;
+      }
+
+      function resetResult() {
+        document.getElementById('result').innerHTML = '';
+      }
+
+      document.getElementById('form').addEventListener('reset', () => {
+        resetResult();
+      });
+
+      document.getElementById('item1_metric').addEventListener('change', (e) => {
+        document.getElementById('item2_metric').innerText = e.target.value;
+      });
+    </script>
+  </body>
+</html>
